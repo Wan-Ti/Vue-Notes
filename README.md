@@ -63,6 +63,54 @@ Vue完整版同时包含编译器和运行时的版本；</br>
 
 * Vue runtime版抛弃了编译器，体积小了很多，适应于生产版本
 
+## Vue中的options
+
+**options的五类属性**
+
+* 数据：data、props、propsData、computed、methods、watch
+
+* DOM: el、template、render、renderError;
+
+* 生命周期钩子：beforeCreate、created、beforeMount、mounted、beforeUpdate、updated、activated、deactivated、beforeDestory、destoryed、errorCaptured;
+
+* 资源：directives、filters、components;
+
+* 组合：parent、mixins、extends、provide、inject;
+
+**基本属性**
+
+* el-挂载点：可以用$mount代替
+* data-内部数据：支持对象和函数，优先用函数
+* methods-方法：事件处理函数或者是普通函数
+* components:Vue组件，注意大小写
+* 四个钩子：</br>
+  created-实例出现在内存中；</br>
+  mounted-实例出现在页面中；</br>
+  updated-实力更新；</br>
+  destoryed-实例从页面和内存中消亡;</br>
+* props-外部数据/属性：</br>
+  message="n"传入字符串；</br>
+  :message="n"传入this.n数据；</br>
+  :fn-"add"传入this.add函数</br>
+  
+### Vue数据响应式
+
+**Object.defineProperty**
+
+* 可以给对象添加属性value
+* 可以给对象添加gette / setter
+* getter / setter用于对属性的读写进行监控
+
+**设计模式（代理）**
+
+对myData对象的属性读写，全权由另一个对象vm负责，那么vm就是myData的代理。
+
+**vm = new Vue({data:myData})**
+
+
+### 数据响应式
+ 
+
 
 
 
