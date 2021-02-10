@@ -204,6 +204,338 @@ watch有两个选项：immeditate表示是否在第一次渲染的时候执行�
 2:如果需要在某个数据变化时做一些事情，使用watch来观察这个数据变化
 
 
+### Vue模板
+
+**模板template三种写法**
+
+```
+一：Vue完整版，写在HTML里
+<div id=xxx>
+   {{n}}
+   <button @click="add">+1</button>
+</div>
+
+new Vue({
+   el: '#xxx',
+   data:{n:0},// data可以改成函数
+   methods:{add()}
+})
+```
+```
+二：Vue完整版，写在选项里
+
+<div id=app>
+</div>
+
+new Vue({
+  template:`
+     <div>
+        {{n}}
+        <button @click="add">+1</button>`
+   data:{n:0},//data可以改成函数
+   methods:{add(){ this.n += 1}}
+}).$mount('#app')
+// 细节：div#app 会被替代
+  
+```
+
+```
+三、Vue非完整版，配合xxx.vue文件
+
+<template>
+   <div>
+     {{n}}
+     <button @click="add">
+        +1
+     </button>
+     </div>
+</template>
+
+
+<script>
+export default { 
+  data(){ return {n:0} },
+  // data必须为函数
+  methods:{add(){this.n += 1}}
+}
+</script>
+<style>此处为CSS</style>
+
+在另一个文件中写下：
+import Xxx from './xxx.vue'
+// Xxx是一个options对象
+new Vue({
+   render: h => h(Xxx)
+}).$mount('#app')
+
+```
+
+### Vue模板中的语法
+
+**表达式**
+
+* {{ object.a}}表达式
+* {{ n + 1 }}可以写任何运算
+* {{ fn(n) }}可以调用函数
+* 如果值为undefined 或 null就不显示
+* <div v-text="表达式"></div>
+
+**HTML内容**
+* 假设data.x值为`<strong>hi</strong>`
+* `<div v-html="x"></div>`即可显示粗体的hi
+
+**绑定属性**
+
+* 绑定src
+`<img v-bind:src="x" />`
+
+* v-bind:简写为:
+`<img :src="x" />`
+
+* 绑定对象
+```
+<div 
+:style="{border: '1px solid red',height:100}>
+//此处把'100px'写成100
+
+</div>
+```
+
+**绑定事件**
+
+* v-on:事件名
+```
+<button v-on:clcik="add">+1</button>
+//点击之后，Vue会运行add()
+
+<button v-on:click="xxx(1)">xxx</button>
+//点击之后，Vue会运行xxx(1)
+
+<button v-on:click="n+=1">xxx</button>
+//点击之后，Vue会运行n+=1;
+```
+
+* 缩写
+`<button @click="add">+1</button>`
+
+
+**条件判断**
+
+* if...else
+```
+<div v-if="x>0">
+x大于0
+</div>
+
+<div v-else=if="x===0">
+x为0
+</div>
+
+<div v-else>
+x小于0
+</div>
+
+```
+
+**循环**
+
+* for(value,key)in对象或数组
+```
+<ul>
+   <li v-for="(u,index) in users" :key="index">
+      索引：{{index}} 值： {{u.name}}
+   </li>
+</ul>
+
+<ul>
+   <li v-for="(value,name) in obj" :key="name">
+     属性名：{{name}},属性值：{{name}}
+    </li>
+ </ul>
+ 
+```
+
+**显示、隐藏**
+
+* v-show
+`<div v-show="n%2===0">n 是偶数</div>`
+
+* 近似等于 
+
+`<div :style="{display:n%2===0?'block':'none'}">n 是偶数 </div>`
+
+看得见的元素display不只有block，如table的display为table,li的display为list-item
+
+**总结**
+
+* Vue模板主要特点有：</br>
+ 使用XML语法（不是HTML）；</br>
+ 使用{{}}插入表达式；</br>
+ 使用v-html v-on v-bind 等指令操作DOM；</br>
+ 使用v-if v-for等指令实现条件判断和循环；</br>
+ 
+ 
+### 指令Directive
+
+**指令**
+
+* 什么是指令？
+```
+<div v-text="x"></div>
+<div v-html="x"></div>
+
+以v-开头的东西就是指令
+```
+
+* 语法</br>
+v-指令名：参数=值，如v-on:click=add;</br>
+如果值里没有特殊字符，则可以不加引号；</br>
+有些指令没有参数和值；</br>
+有些指令没有值，如v-on:click.prevent;</br>
+
+**修饰符**
+
+* 有些指令支持修饰符</br>
+@click.stop="add"表示阻止事件传播/冒泡；</br>
+@click.prevent="add"表示阻止默认动作；</br>
+@click.stop.prevent="add"同时表示两种意思；</br>
+
+* 一共有多少修饰符呢？
+v-on支持的有.{keycode | keyAlias}
+.stop.prevent.capture.self.once.passive.native;
+快捷键相关.ctrl.alt.shift.meta.exact;
+鼠标相关：.left.right.middle;
+v-bind支持的有.prop.camel.sync;
+v-model支持的有.lay.number.trim
+
+**.sync修饰符**
+
+* Vue规则:组件不能修改props外部属性
+
+* Vue规则：this.$emit可以触发事件，并传参；
+
+* Vue规则：$event可以获取$emit的参数
+
+### 总结
+
+**@click.stop="xxx"**
+
+**@click.prevent="xxx"**
+
+**@keypress.enter="xxx"**
+
+**:money.sync="total"**
+
+### Directives
+
+**两种写法**
+
+· 一、声明一个全局指令
+
+`Vue.directive('x',directiveOptions)`这样就可以在任何组件里用v-x;
+
+·二、声明一个局部指令
+```
+new Vue({
+  ...,
+  directives: {
+     "x":directiveOptions
+  }
+ })
+```
+**directiveOptions**
+
+* 五个函数属性
+```
+bind(el,info,vnode,oldVnode)-类似created
+inserted(el,info,vnode,oldVnode）-类似mounted
+update(el,info,vnode,oldVnode)-类似updated
+componentUpdated(el,info,vnode,oldVnode)
+unbind(el,info,vnode,oldVnode)-类似destoryed
+```
+
+**指令的作用**
+
+* 主要用于DOM操作
+Vue实例/组件用于数据绑定、事件监听、DOM更新；</br>
+Vue指令主要目的就是原生DOM操作；
+
+* 减少重复
+如果某个DOM操作你经常使用，就可以封装为指令；</br>
+如果某个DOM操作比较复杂，也可以封装为指令；</br>
+
+### mixins-混入
+
+混入就是复制；
+
+**减少重复**
+
+* 类比
+directives的作用是减少DOM操作的重复；</br>
+mixins的作用是减少data、methods、钩子的重复；
+
+**mixins技巧**
+
+<a href="https://cn.vuejs.org/v2/guide/mixins.html#%E9%80%89%E9%A1%B9%E5%90%88%E5%B9%B6">选项只能合并</a>
+
+### extends-继承
+
+extends是比mixins更抽象一点的封装；
+
+### provide和inject-提供和注入
+
+**总结：**</br>
+作用：大范围的data和method等共用；</br>
+注意：不能只传themeName不传changeTheme,因为themeName的值是被复制给provide的；
+
+### 总结：
+
+**directives指令**</br>
+全局用Vue.directive('x',{...});</br>
+局部用options.directives;</br>
+作用是减少DOM操作相关重复代码;</br>
+
+**mixins混入**</br>
+全局用Vue.mixin({...});</br>
+局部用options.mixins:[mixin1,mixin2];</br>
+作用是减少options里的重复；</br>
+
+**extends继承/扩展**</br>
+全局用Vue.extend({...});</br>
+局部用options.extends:{...};</br>
+作用跟mixins差不多，只是形式不同；</br>
+
+**provide/inject提供和注入**</br>
+祖先提供东西，后代注入东西；</br>
+作用是大范围、隔N代共享信息；</br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
