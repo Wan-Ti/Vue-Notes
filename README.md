@@ -110,7 +110,100 @@ Vue完整版同时包含编译器和运行时的版本；</br>
 
 ### 数据响应式
  
+### 数据响应式
 
+响应式：对外界操作做出反应成为响应式
+
+**Vue的data是响应式**
+
+**Vue.set和this.$set**
+
+* 作用：</br>
+  新增key;</br>
+  自动创建代理和监听；</br>
+  触发UI更新;</br>
+
+`举例：this.$set(this.object,'m',100
+)`
+
+**总结：**
+
+* 对象中新增的key</br>
+  Vue无法事先监听和代理；</br>
+  使用set来新增key，创建监听和代理，更新UI，需要提前把属性都写出来；</br>
+
+* 数组中新增的key</br>
+  数组新增key最好通过7个API；
+  
+## Computed和Watch
+
+### option中的进阶属性
+
+* Computed-计算属性</br>
+  无需加括号；</br>
+  根据依赖是否变化来缓存；</br>
+  
+* Watch-侦听</br>
+  一旦data变化，就执行函数；</br>
+  options.watch;</br>
+  this.$watch用法；</br>
+  deep,immeditate含义；</br>
+  
+* directives-指令 </br>
+  内置指令v-if/v-for/v-bind/v-on;</br>
+  自定义指令，如v-focus;</br>
+  指令是为了减少重复的DOM操作；</br>
+  
+* mixin-混入</br>
+  重复三次之后的出路；</br>
+  混入v.s.全局混入；</br>
+  选项自动合并；</br>
+  混入就是为了减少重复的构造选项；</br>
+  
+* extends-继承</br>
+  继承是为了减少重复的构造选项；</br>
+  
+* provide/inject 
+
+**响应式原理**
+
+* options.data</br>
+  会被Vue监听；</br>
+  会被Vue实例代理；</br>
+  每次对data的读写都会被Vue监控；</br>
+  Vue会在data变化时更新UI；</br>
+  
+
+### Computed
+
+* 用途：</br>
+  被计算出来的属性就是计算属性</br>
+
+* 缓存：</br>
+  如果依赖的属性没有变化，就不会重新计算，getter/setter默认不会做缓存，Vuez做了特殊处理
+  
+
+### Watch
+
+* 用途：</br>
+  当数据变化时，执行一个函数
+
+* 语法：<a href="https://cn.vuejs.org/v2/api/#watch">推荐看文档</a>
+
+### watch和computed的区别
+computed(计算属性)-watch(监听)</br>
+
+computed看上去是方法，但是实际上是计算属性，该属性用来计算出一个值(就是你所依赖的数据动态显示的计算结果，该计算结果会被缓存)。commputed的值在getter执行后是会缓存的，只有在它以来的属性值改变之后，下一次获取computed的值才会重新调用相应的getter来计算。</br>
+
+该值在调用的时候不需要加括号，可以作为属性直接使用。二是根据依赖自动缓存，如果依赖不变那么computed的值不会发生变化</br>
+
+watch用来监听data的数据回调，当依赖的data的数据发生变化时执行回调。在方法中传入newVal和oldVal，可以提供输入值无效，提供中间值的场景。Vue实例会在实例化时调用$watch(),遍历watch对象的每一个属性。</br>
+
+watch有两个选项：immeditate表示是否在第一次渲染的时候执行该函数，第二个选项是deep,deep的作用是在渲染的时候是否去监听属性的变化。</br>
+
+总结:
+1:如果一个数据依赖于其他数据，那么就把这个数据设计为computed的</br>
+2:如果需要在某个数据变化时做一些事情，使用watch来观察这个数据变化
 
 
 
