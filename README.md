@@ -509,6 +509,24 @@ extends是比mixins更抽象一点的封装；
 祖先提供东西，后代注入东西；</br>
 作用是大范围、隔N代共享信息；</br>
 
+## Vue表单和v-model
+
+**查看文档**
+
+<a hred="https://cn.vuejs.org/v2/guide/forms.html">阅读文档：表单输入绑定</a>
+
+**基本用法**
+
+input/textarrea/checkbox/radio/select/from;
+
+**修饰符**
+
+.lazy/.number/.trim
+
+**v-model**
+
+Vue的双向绑定指的就是v-model，实际上v-model是v-bind:value和v-on:input的语法糖
+
 
 
 
